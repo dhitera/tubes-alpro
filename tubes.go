@@ -49,16 +49,22 @@ func inputData(TAB *tabCamaba, role string) {
 	var i camaba
 	fmt.Print("Masukkan Nama Lengkap: ")
 	fmt.Scan(&i.nama)
+	i.nama = strings.ReplaceAll(i.nama, "_", " ")
+
 	fmt.Print("Masukkan Jurusan anda: ")
 	fmt.Scan(&i.jurusan)
+	i.jurusan = strings.ReplaceAll(i.jurusan, "_", " ")
+
 	fmt.Print("Masukkan Daerah Asal anda: ")
 	fmt.Scan(&i.asal)
+	i.asal = strings.ReplaceAll(i.asal, "_", " ")
+
 	fmt.Print("Masukkan No. Handphone anda: ")
 	fmt.Scan(&i.nohp)
 	if role == "adm" {
 		fmt.Print("Input Nilai: ")
 		fmt.Scan(&i.nilai)
-		if i.nilai >= 75 {
+		if i.nilai >= 75 && i.nilai <= 100{
 			i.status = "Lulus"
 		}else {
 			i.status = "Ditolak"
@@ -72,12 +78,15 @@ func inputData(TAB *tabCamaba, role string) {
 }
 
 func inputDataJurusan(TAB *tabJurusan) {
-	
 	var i jurusan
 	fmt.Print("Masukkan Nama Jurusan: ")
 	fmt.Scan(&i.nama)
+	i.nama = strings.ReplaceAll(i.nama, "_", " ")
+
 	fmt.Print("Masukkan Kode Jurusan: ")
 	fmt.Scan(&i.kode)
+	i.kode = strings.ReplaceAll(i.kode, "_", " ")
+
 	*TAB = append(*TAB, i)
 	fmt.Println("Data berhasil ditambahkan!")
 }
@@ -129,10 +138,16 @@ func ubahData(TAB tabCamaba) {
 		if namaTabel == "-" {
 			fmt.Print("Ubah Nama: ")
 			fmt.Scan(&i.nama)
+			i.nama = strings.ReplaceAll(i.nama, "_", " ")
+
 			fmt.Print("Ubah Jurusan: ")
 			fmt.Scan(&i.jurusan)
+			i.jurusan = strings.ReplaceAll(i.jurusan, "_", " ")
+
 			fmt.Print("Ubah Daerah Asal: ")
 			fmt.Scan(&i.asal)
+			i.asal = strings.ReplaceAll(i.asal, "_", " ")
+
 			fmt.Print("Ubah No. Handphone: ")
 			fmt.Scan(&i.nohp)
 			fmt.Print("Ubah Nilai: ")
@@ -143,12 +158,15 @@ func ubahData(TAB tabCamaba) {
 			case "nama":
 				fmt.Print("Ubah Nama: ")
 				fmt.Scan(&TAB[pilihData].nama)
+				i.nama = strings.ReplaceAll(i.nama, "_", " ")
 			case "jurusan":
 				fmt.Print("Ubah Jurusan: ")
 				fmt.Scan(&TAB[pilihData].jurusan)
+				i.jurusan = strings.ReplaceAll(i.jurusan, "_", " ")
 			case "asal":
 				fmt.Print("Ubah Daerah Asal: ")
 				fmt.Scan(&TAB[pilihData].asal)
+				i.asal = strings.ReplaceAll(i.asal, "_", " ")
 			case "nohp":
 				fmt.Print("Ubah No. Handphone: ")
 				fmt.Scan(&TAB[pilihData].nohp)
@@ -161,7 +179,7 @@ func ubahData(TAB tabCamaba) {
 			}
 		}
 
-		if TAB[pilihData].nilai >= 75 {
+		if TAB[pilihData].nilai >= 75 && TAB[pilihData].nilai <= 100{
 			TAB[pilihData].status = "Lulus"
 		} else {
 			TAB[pilihData].status = "Ditolak"
@@ -193,26 +211,31 @@ func ubahDataJurusan(TAB tabJurusan) {
 			fmt.Println("Nomor tidak ada")
 			return
 		}
-		fmt.Printf("%-3s %-35s %-20s\n","NO", "NAMA", "KODE JURUSAN")
+		fmt.Printf("%-35s %-20s\n","NAMA", "KODE JURUSAN")
 		fmt.Printf("%-35v %-20v\n", TAB[pilihData].nama, TAB[pilihData].kode)
 		fmt.Println()
-		fmt.Println("=> Ketik (-) untuk Ubah Semua\n=> Tuliskan Nama Tabel jika ingin ubah spesifik\n(nama, jurusan, asal, nohp, nilai)")
+		fmt.Println("=> Ketik (-) untuk Ubah Semua\n=> Tuliskan Nama Tabel jika ingin ubah spesifik\n(nama, kode)")
 		fmt.Print("Pilih: ")
 		fmt.Scan(&namaTabel)
 		if namaTabel == "-" {
 			fmt.Print("Ubah Nama: ")
 			fmt.Scan(&i.nama)
+			i.nama = strings.ReplaceAll(i.nama, "_", " ")
+
 			fmt.Print("Ubah Kode: ")
 			fmt.Scan(&i.kode)
+			i.kode = strings.ReplaceAll(i.kode, "_", " ")
 			TAB[pilihData] = i
 		} else {
 			switch strings.ToLower(namaTabel) {
 			case "nama":
 				fmt.Print("Ubah Nama: ")
 				fmt.Scan(&TAB[pilihData].nama)
-			case "jurusan":
+				i.nama = strings.ReplaceAll(i.nama, "_", " ")
+			case "kode":
 				fmt.Print("Ubah Kode: ")
 				fmt.Scan(&TAB[pilihData].kode)
+				i.kode = strings.ReplaceAll(i.kode, "_", " ")
 			default:
 				fmt.Println("Nama tabel tidak valid!")
 				return
@@ -316,8 +339,44 @@ func cariDataKelulusan(TAB tabCamaba, x string) {
 
 // FUNGSI SORTING
 
-func urutkanData() {
-	
+func urutNilaiAsc(TAB tabCamaba) {
+	var temp camaba
+	i := 1
+	for i <= len(TAB)-1 {
+		idx_max := i - 1
+		j := i
+		for j < len(TAB) {
+			if TAB[idx_max].nilai < TAB[j].nilai {
+				idx_max = j
+			}
+			j = j + 1
+		}
+		temp = TAB[idx_max]
+		TAB[idx_max] = TAB[i-1] 
+		TAB[i-1] = temp
+		i = i + 1
+	}
+	fmt.Println("Data berhasil diurutkan!")
+}
+
+func urutNilaiDesc(TAB tabCamaba) {
+	var temp camaba
+	i := 1
+	for i <= len(TAB)-1 {
+		idx_min := i - 1
+		j := i
+		for j < len(TAB) {
+			if TAB[idx_min].nilai > TAB[j].nilai {
+				idx_min = j
+			}
+			j = j + 1
+		}
+		temp = TAB[idx_min]
+		TAB[idx_min] = TAB[i-1] 
+		TAB[i-1] = temp
+		i = i + 1
+	}
+	fmt.Println("Data berhasil diurutkan!")
 }
 
 // FUNGSI TAMPILKAN DATA AND SEARCH DATA MAHASISWA DAN JURUSAN
@@ -328,7 +387,7 @@ func tampilDanCariData(TAB tabCamaba) {
 	fmt.Println("=====> Data Calon Mahasiswa <=====")
 	if len(TAB) > 0 {
 		tampilkanData(TAB)
-		fmt.Println("Pilih Opsi!\n 1. Cari Data\n 2. Kembali")
+		fmt.Println("Pilih Opsi!\n 1. Cari Data\n 2. Urutkan Data\n 3. Kembali")
 		fmt.Print("Pilih: ")
 		fmt.Scan(&pilihan)
 		if pilihan == 1 {
@@ -336,21 +395,31 @@ func tampilDanCariData(TAB tabCamaba) {
 			fmt.Println("Tampilkan Data Berdasarkan?\n 1. Jurusan\n 2. Status(Lulus)\n 3. Status(Ditolak)")
 			fmt.Print("Pilih: ")
 			fmt.Scan(&pilihanCari)
-		if pilihanCari == 1 {
-			fmt.Print("Jurusan apa yang ingin dicari?: ")
-			fmt.Scan(&jurusan)
-			cariDataJurusan(TAB, jurusan)
-			fmt.Print("Kembali?(y): ")
-			fmt.Scan(&pilihan)
-		}else if pilihanCari == 2 {
-			cariDataKelulusan(TAB, "Lulus")
-			fmt.Print("Kembali?(y): ")
-			fmt.Scan(&pilihan)
-			}else if pilihanCari == 3 {
-				cariDataKelulusan(TAB, "Ditolak")
+			if pilihanCari == 1 {
+				fmt.Print("Jurusan apa yang ingin dicari?: ")
+				fmt.Scan(&jurusan)
+				cariDataJurusan(TAB, jurusan)
 				fmt.Print("Kembali?(y): ")
 				fmt.Scan(&pilihan)
-		}
+			}else if pilihanCari == 2 {
+				cariDataKelulusan(TAB, "Lulus")
+				fmt.Print("Kembali?(y): ")
+				fmt.Scan(&pilihan)
+			}else if pilihanCari == 3 {
+					cariDataKelulusan(TAB, "Ditolak")
+					fmt.Print("Kembali?(y): ")
+					fmt.Scan(&pilihan)
+			}
+		}else if pilihan == 2{
+			fmt.Println("Urutkan data nilai secara?\n 1. Ascending\n 2. Descending")
+			fmt.Scan(&pilihanCari)
+			if pilihanCari == 1 {
+				fmt.Printf("\x1bc")
+				urutNilaiAsc(TAB)
+			}else if pilihanCari == 2 {
+				fmt.Printf("\x1bc")
+				urutNilaiDesc(TAB)
+			}
 		}else {
 			fmt.Printf("\x1bc")
 		}
@@ -415,7 +484,7 @@ func camabaMenu(TABM *tabCamaba, TABJ *tabJurusan) {
 		fmt.Println("---------------------")
 		fmt.Println("    Menu Mahasiswa   ")
 		fmt.Println("---------------------")
-		fmt.Println("1. Tampilkan Data\n2. Tambah Data\n3. Ubah Data\n4. Keluar Menu")
+		fmt.Println("1. Tampilkan Data\n2. Tambah Data\n3. Keluar Menu")
 
 
 		fmt.Print("Pilih: ")
@@ -434,10 +503,7 @@ func camabaMenu(TABM *tabCamaba, TABJ *tabJurusan) {
 		case 2:
 			fmt.Printf("\x1bc")
 			inputData(TABM, "cmhs")
-		case 3:
-			fmt.Printf("\x1bc")
-			fmt.Println("Ubah Data")
-        case 4:
+        case 3:
             mainMenu(TABM, TABJ)
             return
         default:
